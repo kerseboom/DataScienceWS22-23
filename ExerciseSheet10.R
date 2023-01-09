@@ -94,11 +94,15 @@ plot(polygon_sf)
 # 2) Find centroid of polygon_left. Plot both polygon_left and centroid_left
 # Note: Use sf cheat sheet to find correct function: https://osf.io/an6b5/download
 # Hint: remember to use option "add=TRUE" within plot if you want to overlay multiple plots
-
+pol_left_centroid <- st_centroid(polygon_left)
+task1.2 <- st_sfc(list(polygon_left, pol_left_centroid))
+plot(task1.2, add=T)
 
 
 # 3) Make a buffer polygon around polygon_left; Plot both polygon_left and polygon_left_buffer
-
+pol_left_buffer <- st_buffer(polygon_left, dist = 5)
+task1.3 <- st_sfc(list(pol_left_buffer, polygon_left))
+plot(task1.3, add=T)
 
 
 
@@ -190,23 +194,36 @@ tm_shape(nz_avg_elev) +
 # Exercises:
 # 1) examine "world" dataset (from spData library) using view() and summary().
 # Use tmap to plot world map
-
+tmap_mode("view")+
+  tm_shape(world)+
+  tm_polygons()
 
 
 
 # 2) calculate population_density of each country. Colorize map to show pop_density
+task2.2 <- world %>% 
+  mutate(pop_dens = pop / area_km2)
 
+tmap_mode("view")+
+  tm_shape(task2.2)+
+  tm_polygons(col = "pop_dens")
 
 
 
 # 3) show same map as in two, but only show southern + eastern Asia
 
+task2.3 <- task2.2 %>% 
+  filter(subregion == "Southern Asia" | subregion == "Eastern Asia")
 
-
-
+tm_shape(task2.3)+
+  tm_polygons(col = "pop_dens")
+  
 # 4) look at the summary of "urban_agglomerations" simple feature (part of spData)
 # plot cities from "urban_agglomerations" on top of the "world" map
-
+tm_shape(world)+
+  tm_polygons()+
+  tm_shape(urban_agglomerations)+
+  tm_dots()
 
 
 

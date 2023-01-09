@@ -68,19 +68,42 @@ trips %>%
 # 1) use read_excel() to read Fallzahlen_Kum_Tab_aktuell.xlsx
 # The excel document has several sheets, only read "BL_7-Tage-Inzidenz (fixiert)"
 # Hint: use the "skip argument" to disregard the first n rows. 
-
+library(readxl)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(see)
+raw_data <- read_excel("data/Fallzahlen_Kum_Tab_aktuell.xlsx", sheet=4, skip=4)
 
 # 2) Tidy the data such that there are three columns: Date, Bundesland, Incidence
 # Hint: use pivot_longer()
+df <- raw_data %>% 
+  pivot_longer(cols = 2:459, 
+               names_to = "Date",
+               values_to = "Incidence") %>% 
+  rename("Bundesland"="MeldeLandkreisBundesland") %>% 
+  select(Date,Bundesland,Incidence) %>% 
+  mutate(Date = dmy(Date))
+
 
 
 # 3) Smooth the data: find average incidence for every week.
 # Hint: use week() & year() functions from lubridate.
 
+weekly_incidence <- df %>% 
+  mutate(week = week(Date), year = year(Date)) %>% 
+  group_by(Bundesland, year, week) %>%
+  summarise(avg_incidence = mean(Incidence, na.rm = T), Date = last(Date)) %>% 
+  ungroup()
 
 # 4) Choose any three german states (Bundesländer); filter dataframe to only include them
 # Produce a line plot of the incidences
+p <- weekly_incidence %>% 
+  filter(Bundesland %in% c("Berlin", "Hessen", "Bayern")) %>% 
+  ggplot() +
+  geom_line(aes(Date, avg_incidence, col=Bundesland))
 
+p
 
 # 5) Check how your plot would look for for different types of color-vision deficiency.
 # use functions "cvd_grid" or "view_cvd" in library colorblindr
