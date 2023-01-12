@@ -5,25 +5,25 @@ library(tidyverse)
 
 
 # Download & unzip input files. (The following code chunk only needs to be performed once)
-download.file(url = "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip",
-             destfile = "berlin_districts.zip",
-             mode = "wb")
+# download.file(url = "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip",
+#              destfile = "berlin_districts.zip",
+#              mode = "wb")
+# 
+# unzip("berlin_districts.zip", exdir = "berlin_districts")
 
-unzip("berlin_districts.zip", exdir = "berlin_districts")
-
-download.file(url = "vbb.de/vbbgtfs",
-              destfile = "berlin_gtfs.zip",
-              mode = "wb")
+# download.file(url = "vbb.de/vbbgtfs",
+#               destfile = "berlin_gtfs.zip",
+#               mode = "wb")
 
 # use sf's "st_read()" to read in Berlin's districts
-districts <- st_read("berlin_districts/bezirksgrenzen.shp")
+districts <- st_read("data/berlin_districts/bezirksgrenzen.shp")
 
 tmap_mode("view")
 tm_shape(districts) + 
   tm_polygons()
 
 # use tidytransit's "read_gtfs()" to read in entire GTFS feed for VBB area 
-berlin_gtfs <- read_gtfs("berlin_gtfs.zip")
+berlin_gtfs <- read_gtfs("data/berlin_gtfs.zip")
 
 # Filter entire GTFS feed to only include relevant info for given day and time-range:
 # today (Jan 9) between 17:00 and 18:00. 
