@@ -1,0 +1,26 @@
+---
+title: "Flipper lengths"
+date: '2022-10-11'
+output: html_document
+#output: pdf_document
+---
+
+```{r setup, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(palmerpenguins)
+
+shorter <- penguins %>% 
+  filter(flipper_length_mm < 200)
+```
+
+## Length of flipper lengths
+We have data about `r nrow(penguins)` penguins. Only 
+`r nrow(penguins) - nrow(shorter)` have a _flipper length_ larger than 200mm. The distribution of the remainder is shown
+below:
+
+```{r, echo = FALSE}
+shorter %>% 
+  ggplot(aes(flipper_length_mm)) + 
+  geom_freqpoly(binwidth = 1)
+```

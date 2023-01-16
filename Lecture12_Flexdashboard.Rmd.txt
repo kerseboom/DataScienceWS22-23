@@ -1,0 +1,55 @@
+---
+title: "Penguins distribution dashboard"
+output: flexdashboard::flex_dashboard
+---
+
+```{r setup, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(palmerpenguins)
+knitr::opts_chunk$set(fig.width = 5, fig.asp = 1/3)
+```
+
+## Column 1
+
+### Flipper length
+
+```{r}
+ggplot(penguins, aes(flipper_length_mm)) + 
+  geom_histogram(binwidth = 0.1) +
+  xlab("Flipper length in mm") +
+  ylab("Count") +
+  theme_minimal()
+```
+
+### Species
+
+```{r}
+ggplot(penguins, aes(species)) + 
+  geom_bar() +
+  xlab("Species") +
+  ylab("Count") +
+  theme_minimal()
+```
+
+### Islands
+
+```{r}
+ggplot(penguins, aes(island)) + 
+  geom_bar() +
+  xlab("Island") +
+  ylab("Count") +
+  theme_minimal()
+```
+
+## Column 2
+
+### The penguins with the longest flippers
+
+```{r}
+penguins %>% 
+  arrange(desc(flipper_length_mm)) %>% 
+  head(100) %>% 
+  select(flipper_length_mm, body_mass_g, species, island) %>% 
+  DT::datatable()
+```
