@@ -57,6 +57,7 @@ available_features()
 
 available_tags("shop")
 
+
 # Pull and plot all doctors' offices
 amenity <- opq(bbox = 'Berlin, Germany')  %>%
   add_osm_feature(key = "amenity", value = "doctors") %>% 
@@ -102,8 +103,12 @@ tm_shape(combined)+
 # https://wiki.openstreetmap.org/wiki/Map_features
 # hint: to save computation resources / time, choose a feature that there
 # aren't too many of in Berlin.
+amenity <- opq(bbox = 'Berlin, Germany')  %>%
+  add_osm_feature(key = "amenity", value = "library") %>% 
+  osmdata_sf()
 
-
+tm_shape(amenity$osm_points)+
+  tm_dots(id = "name")
 
 # 2) Load berlin districts shape file into R & plot districts on same map as amenities
 download.file(url = "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip",
@@ -115,13 +120,18 @@ unzip("berlin_districts.zip", exdir = "berlin_districts")
 districts <- st_read("berlin_districts/bezirksgrenzen.shp")
 
 
+tm_shape(amenity$osm_points)+
+  tm_dots(id = "name")+
+    tm_shape(districts)+
+      tm_polygons(id = "Gemeinde_n", alpha = 0.5)
+
 
 
 
 # 3) Remove all features that are located outside of Berlin.
 # Plot features within Berlin. 
 # hint: st_intersection may help
-
+task3 <- st_filter(amenity$osm_points, districts, join = st_intersects)
 
 
 
