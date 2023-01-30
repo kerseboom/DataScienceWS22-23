@@ -12,7 +12,7 @@ berlin_10pct_output_trips <-  readTripsTable("~/Downloads/berlin-v5.5.3-10pct.ou
 districts <- st_read("data/berlin_districts/bezirksgrenzen.shp")
 
 
-trips <- berlin_1pct_output_trips %>%  select(dep_time, trav_time, wait_time, traveled_distance, main_mode, start_activity_type, end_activity_type, start_x, start_y, end_x, end_y)
+trips <- berlin_10pct_output_trips %>%  select(dep_time, trav_time, wait_time, traveled_distance, main_mode, start_activity_type, end_activity_type, start_x, start_y, end_x, end_y)
 test <- trips[1:100,]
 
 
